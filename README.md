@@ -1,5 +1,5 @@
-# rho-upper-limit
-Programs for running tests in evaluating the upper limit for the constant rho.
+# rho-upper-bound
+Programs for running tests in evaluating the upper bound for the constant rho.
 These programs are part of my project in the course DD2467 Individual Project in Theoretical Computer Science.
 
 ## Description
