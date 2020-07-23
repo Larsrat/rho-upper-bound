@@ -19,6 +19,12 @@ int main() {
     //2 0 1 1
     //3 1 0 1
 
+    clock_t tmp_start, tmp_stop;
+    double tmp_time;
+    double min_time, max_time;
+    clock_t size_start, size_stop;
+    double size_time;
+
     const clock_t begin_time = clock();
     int matrix[10];
     vector<long long int> vec;
@@ -45,6 +51,9 @@ int main() {
     // Let every graph be represented by an integer and let upper be the upper limit
     // for the values of these integer representations
     for (int z = 3; z <= 6; z++) {
+        size_start = clock();
+        min_time = 9999999.0;
+        max_time = -1.0;
         int lowest = 1000;
         int evaluated_graphs = 0;
         long long int tot_eval = 0;
@@ -61,7 +70,7 @@ int main() {
         long long int one = 1;
 
         int percentage = 0;
-        cout << "Starting evaluating for " << z << "x" << z << endl;
+        cout << "Starting evaluation for " << z << "x" << z << endl;
         for (long long int x = 0; x < upper; x++) {
             // For keeping track of collision matchings
             if ((z == 6) && ((x % 10737418) == 0)) {
@@ -152,7 +161,15 @@ int main() {
 
             // Evaluate the highest guaranteed matching of the graph
             evaluated_graphs++;
+            tmp_start = clock();
             int t = find_upper_limit(matrix, z);
+            tmp_stop = clock();
+            tmp_time = (tmp_stop - tmp_start) / (double) CLOCKS_PER_SEC;
+            if (tmp_time < min_time)
+                min_time = tmp_time;
+            if (tmp_time > max_time)
+                max_time = min_time;
+
             if (t < lowest) {
                 lowest = t;
                 vec.clear();
@@ -162,6 +179,8 @@ int main() {
             }
             num_of_matchings[z][t] += 1;
         }
+        size_stop = clock();
+        size_time = (size_stop - size_start) / (double) CLOCKS_PER_SEC;
         // Write the results to a file
         if (z == 3) {
             file.open("output_3x3");
@@ -174,13 +193,20 @@ int main() {
         }
         file << "The lowest number of matchings: " << lowest << "/" << z << '\n';
         file << "Number of unique graphs evaluated: " << evaluated_graphs << '\n';
+        file << scientific;
+        file << "Minimum time for a rho-evaluation: " << min_time << '\n';
+        file << "Maximum time for a rho-evaluation: " << max_time << '\n';
+        file << "Total time for this size: " << size_time << '\n';
+        
         for (int l = 0; l <= z; l++) {
             file << "Number of matchings of size " << l << ": " << num_of_matchings[z][l] << '\n';
         }
         file << "Total number of graphs evaluated " << tot_eval << '\n';
-        for (int l = 0; l <= z; l++) {
+
+/*        for (int l = 0; l <= z; l++) {
             file << "Tot number of matchings of size " << l << ": " << tot_num_of_matchings[z][l] << '\n';
-        }
+        }*/
+
         for (int l = 0; l < vec.size(); l++) {
             file << vec.at(l) << '\n';
         }
