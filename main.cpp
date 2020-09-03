@@ -24,6 +24,8 @@ int main() {
     double min_time, max_time;
     clock_t size_start, size_stop;
     double size_time;
+    double size_rho_time;
+    double average_time;
 
     const clock_t begin_time = clock();
     int matrix[10];
@@ -54,9 +56,9 @@ int main() {
         size_start = clock();
         min_time = 9999999.0;
         max_time = -1.0;
+        size_rho_time = 0.0;
         int lowest = 1000;
         int evaluated_graphs = 0;
-        long long int tot_eval = 0;
         long long int upper = (int)pow(2.0, z*(z-1));
         long long int curr_val;
         unordered_map<long long int, bool> checked_graph;
@@ -168,8 +170,8 @@ int main() {
             if (tmp_time < min_time)
                 min_time = tmp_time;
             if (tmp_time > max_time)
-                max_time = min_time;
-
+                max_time = tmp_time;
+            size_rho_time += tmp_time;
             if (t < lowest) {
                 lowest = t;
                 vec.clear();
@@ -181,6 +183,7 @@ int main() {
         }
         size_stop = clock();
         size_time = (size_stop - size_start) / (double) CLOCKS_PER_SEC;
+        average_time = size_rho_time / (double) evaluated_graphs;
         // Write the results to a file
         if (z == 3) {
             file.open("output_3x3");
@@ -196,16 +199,13 @@ int main() {
         file << scientific;
         file << "Minimum time for a rho-evaluation: " << min_time << '\n';
         file << "Maximum time for a rho-evaluation: " << max_time << '\n';
+        file << "Total time for rho-evaluations: " << size_rho_time << '\n';
+        file << "Average time for rho-evaluations: " << average_time << '\n';
         file << "Total time for this size: " << size_time << '\n';
         
         for (int l = 0; l <= z; l++) {
             file << "Number of matchings of size " << l << ": " << num_of_matchings[z][l] << '\n';
         }
-        file << "Total number of graphs evaluated " << tot_eval << '\n';
-
-/*        for (int l = 0; l <= z; l++) {
-            file << "Tot number of matchings of size " << l << ": " << tot_num_of_matchings[z][l] << '\n';
-        }*/
 
         for (int l = 0; l < vec.size(); l++) {
             file << vec.at(l) << '\n';
