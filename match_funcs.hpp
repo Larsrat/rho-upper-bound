@@ -92,9 +92,7 @@ int find_upper_limit(int matrix[10], int n) {
                 temp_upper = temp_limit;
             } else {
                 // If a previously tested pi guarantees a higher value, then break
-                if (temp_upper < upper_limit) {
-                    break;
-                }
+                if (temp_upper < upper_limit) break;
             }
             if (temp_upper > temp_limit) temp_upper = temp_limit;
         } while (next_permutation(sigma, sigma + n));
